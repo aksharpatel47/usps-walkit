@@ -50,17 +50,17 @@ export async function getAddress(queryParams: Record<string, string>) {
   const urlString = url.toString();
   console.log(`Fetching address from: ${urlString}`);
 
-  const response = await fetch(urlString, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  try {
+    const response = await fetch(urlString, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-  if (!response.ok) {
-    const errorData = await response.text();
-    throw new Error(`Failed to fetch address: ${errorData}`);
+    return response.json();
+  } catch (error) {
+    console.error("Error fetching address:", error);
+    throw error;
   }
-
-  return response.json();
 }

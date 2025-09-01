@@ -1,20 +1,20 @@
 meta {
-  name: Get Addresses Local
+  name: Get Addresses
   type: http
   seq: 4
 }
 
 get {
-  url: http://localhost:3000/address?streetAddress=1735 W Frye Rd&city=Phoenix&state=AZ&ZIPCode=85045
+  url: https://localhost:3000/address?streetAddress&city&state&ZIPCode
   body: none
   auth: none
 }
 
 params:query {
-  streetAddress: 1735 W Frye Rd
-  city: Phoenix
-  state: AZ
-  ZIPCode: 85045
+  streetAddress: 
+  city: 
+  state: 
+  ZIPCode: 
 }
 
 body:json {

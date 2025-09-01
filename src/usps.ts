@@ -58,9 +58,50 @@ export async function getAddress(queryParams: Record<string, string>) {
       },
     });
 
-    return response.json();
+    const data: IUSPSGetAddressResponse = await response.json();
+
+    if ("address" in data && isAddressPOBox(data.address)) {
+      return {
+        error: {
+          code: "400",
+          message: "Address cannot be PO Box",
+        },
+      };
+    }
+
+    return data;
   } catch (error) {
     console.error("Error fetching address:", error);
     throw error;
   }
+}
+
+function isAddressPOBox(address: IUSPSAddress): boolean {
+  const poBoxRegex = /p\.?o\.?\s*box/i;
+  return poBoxRegex.test(address.streetAddress);
+}
+
+type IUSPSGetAddressResponse =
+  | IUSPSGetAddressSuccessResponse
+  | IUSPSGetAddressErrorResponse;
+
+interface IUSPSAddress {
+  streetAddress: string;
+  secondaryAddress: string;
+  city: string;
+  state: string;
+  ZIPCode: string;
+  ZIPPlus4: string;
+}
+
+interface IUSPSGetAddressSuccessResponse {
+  address: IUSPSAddress;
+  ZIPPlus4: string;
+}
+
+interface IUSPSGetAddressErrorResponse {
+  error: {
+    code: string;
+    message: string;
+  };
 }
